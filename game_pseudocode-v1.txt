@@ -1,0 +1,104 @@
+Initialize game()
+    # Set up initial conditions
+    deck_red = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    deck_blue = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    players = []  # List of player objects
+    pot = 0
+    round_number = 1
+
+    # Initialize chips
+    for player in players:
+        player.chips = 20
+        player.hand = {"red": None, "blue": None}
+    
+    start_game()
+
+start_game()
+    while game_is_not_over():
+        play_round()
+
+play_round()
+    # Round setup
+    shuffle(deck_red)
+    shuffle(deck_blue)
+
+    deal_cards(players)
+
+    # Betting Phase
+    pot = 0
+    for player in players:
+        player_bet = betting_phase(player)
+        pot += player_bet
+
+    # Showdown
+    winner = showdown(players)
+    winner.chips += pot
+
+    # End of round
+    reshuffle_decks(deck_red, deck_blue)
+
+    # Check if game is over (end condition)
+    if check_game_over():
+        end_game()
+
+betting_phase(player)
+    # Betting logic for each player
+    bet = 0
+    if player_has_chips(player):
+        if player_turn(player):
+            bet = handle_bet(player)
+    return bet
+
+handle_bet(player)
+    # Player decides to call, raise or fold
+    if player chooses_fold():
+        player.folded = True
+        return 0  # Player doesn't contribute to the pot
+    else if player chooses_call():
+        return match_highest_bet()
+    else if player chooses_raise():
+        return raise_bet()
+
+match_highest_bet()
+    # Match the highest bet on the table
+    return current_highest_bet
+
+raise_bet()
+    # Player raises by adding chips to the pot
+    raise_amount = player.chosen_raise_amount()
+    player.chips -= raise_amount
+    return raise_amount
+
+showdown(players)
+    # Reveal cards and determine winner
+    highest_total = 0
+    winner = None
+    for player in players:
+        if not player.folded:
+            total = calculate_total(player)
+            if total > highest_total:
+                highest_total = total
+                winner = player
+    return winner
+
+calculate_total(player)
+    # Calculate the sum of red + blue card
+    return player.hand["red"] + player.hand["blue"]
+
+reshuffle_decks(deck_red, deck_blue)
+    # Reshuffle decks for the next round
+    shuffle(deck_red)
+    shuffle(deck_blue)
+
+game_is_not_over()
+    # Check if the game is over based on the end condition (e.g. players with no chips)
+    return any(player.chips > 0 for player in players)
+
+end_game()
+    # Display winner or declare game over
+    winner = find_winner(players)
+    print(f"Game Over! {winner.name} is the winner!")
+
+find_winner(players)
+    # Find the player with the most chips
+    return max(players, key=lambda player: player.chips)
